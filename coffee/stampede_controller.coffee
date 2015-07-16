@@ -6,6 +6,9 @@ class StampedeController
 
   constructor: (logger) ->
     @lastChangeTime = new Date
+    setTimeout =>
+      @checkIdle()
+    , 500
 
   process: (sensors) ->
     @checkIdle(sensors)
@@ -36,9 +39,8 @@ class StampedeController
     (value - min) / (max - min) * 100
 
   checkIdle: (sensors) ->
-    if sensors.sound != @lastChangeData.sound || sensors.light != @lastChangeData.light
+    if sensors?
       @lastChangeTime = new Date
-      @lastChangeData = sensors
 
     if (new Date - @lastChangeTime) > 4000
       console.log 'generating idle animal'

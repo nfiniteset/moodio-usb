@@ -8,6 +8,7 @@ var climatelib = require('climate-si7020');
 
 var ambient = ambientlib.use(tessel.port['A']);
 var climate = climatelib.use(tessel.port['B']);
+var led1 = tessel.led[0].output(0);
 var led2 = tessel.led[1].output(1);
 
 function getLightLevel() {
@@ -35,7 +36,20 @@ function postData(data) {
   process.send(data);
 }
 
+function alternateLights() {
+  setInterval(function(){
+    led1.toggle();
+  }, 1000);
+
+  setTimeout(function(){
+    setInterval(function(){
+      led2.toggle();
+    }, 1000);
+  }, 500);
+}
+
 ambient.on('ready', function () {
+  alternateLights();
   getLightLevel();
   setInterval( function () {
     getLightLevel();
